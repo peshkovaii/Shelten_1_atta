@@ -1,4 +1,4 @@
-package org.example.core.repository;
+package org.example.repository;
 
 import org.example.core.Adopter;
 
