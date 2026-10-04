@@ -4,7 +4,7 @@ import org.example.core.*;
 import org.example.core.enums.Species;
 import org.example.service.ShelterService;
 
-import java.util.Locale;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -12,13 +12,13 @@ public class ConsoleUI {
     private final Scanner scanner = new Scanner(System.in);
 
 
-    public ConsoleUI (ShelterService service){
+    public ConsoleUI(ShelterService service) {
         this.service = service;
     }
 
-    public void run(){
+    public void run() {
         printHelp();
-        while(true){
+        while (true) {
             System.out.print("> ");
             String line = scanner.nextLine().trim();
             if (line.isEmpty()) continue;
@@ -26,10 +26,12 @@ public class ConsoleUI {
             String[] p = line.split("\\s+");
             String cmd = p[0].toLowerCase();
 
-            try{
-                switch (cmd){
+            try {
+                switch (cmd) {
                     case "help" -> printHelp();
-                    case "exit" -> {return;}
+                    case "exit" -> {
+                        return;
+                    }
                     case "add" -> handleAdd(p);
                     case "list" -> handleList(p);
                     case "get" -> handleGet(p);
@@ -47,21 +49,21 @@ public class ConsoleUI {
     }
 
 
-    private void printHelp(){
+    private void printHelp() {
         System.out.println("""
-            Доступные команды:
-              help                                     - справка
-              add animal <name> <species> <breed> <age> - добавить животное
-              add adopter <ФИО> <телефон> <email>      - добавить усыновителя
-              list animals                             - все животные
-              list adopters                            - все усыновители
-              list requests                            - все заявки
-              get animal <id>                          - животное по id
-              delete animal <id>                       - удалить животное
-              adopt <animalId> <adopterId>             - создать заявку
-              approve <requestId>                      - одобрить заявку
-              exit                                     - выход
-            """);
+                Доступные команды:
+                  help                                     - справка
+                  add animal <name> <species> <breed> <age> - добавить животное
+                  add adopter <телефон> <email> <ФИО>      - добавить усыновителя
+                  list animals                             - все животные
+                  list adopters                            - все усыновители
+                  list requests                            - все заявки
+                  get animal <id>                          - животное по id
+                  delete animal <id>                       - удалить животное
+                  adopt <animalId> <adopterId>             - создать заявку
+                  approve <requestId>                      - одобрить заявку
+                  exit                                     - выход
+                """);
     }
 
 
@@ -83,10 +85,13 @@ public class ConsoleUI {
 
         } else if (p[1].equalsIgnoreCase("adopter")) {
             if (p.length < 5) {
-                System.out.println("add adopter <ФИО> <телефон> <email>");
+                System.out.println("add adopter <телефон> <email> <ФИО>");
                 return;
             }
-            Adopter ad = new Adopter(p[2], p[3], p[4]);
+            String phone = p[2];
+            String email = p[3];
+            String fullName = String.join(" ", Arrays.copyOfRange(p, 4, p.length));
+            Adopter ad = new Adopter(fullName, phone, email);
             service.addAdopter(ad);
             System.out.println("Добавлено: " + ad);
         } else {
@@ -94,13 +99,14 @@ public class ConsoleUI {
         }
     }
 
-    private void handleList(String[] p){
-        if (p.length < 2){
+    private void handleList(String[] p) {
+        if (p.length < 2) {
             System.out.println("list animals|adopters|requests");
-            return; }
+            return;
+        }
 
-        switch (p[1].toLowerCase()){
-            case "animals"  -> service.getAllAnimals().forEach(System.out::println);
+        switch (p[1].toLowerCase()) {
+            case "animals" -> service.getAllAnimals().forEach(System.out::println);
             case "adopters" -> service.getAllAdopters().forEach(System.out::println);
             case "requests" -> service.getAllRequests().forEach(System.out::println);
             default -> System.out.println("Неизвестный список");
@@ -108,42 +114,44 @@ public class ConsoleUI {
 
     }
 
-    private void handleGet(String[] p){
-        if (p.length < 3){
+    private void handleGet(String[] p) {
+        if (p.length < 3) {
             System.out.println("get animal <id>");
             return;
         }
-        if (p[1].equalsIgnoreCase("animal")){
+        if (p[1].equalsIgnoreCase("animal")) {
             System.out.println(service.getAnimal(Long.parseLong(p[2])));
         }
 
     }
 
-    private void handleDelete(String[] p){
-        if (p.length < 3){
+    private void handleDelete(String[] p) {
+        if (p.length < 3) {
             System.out.println("delete animal <id>");
             return;
         }
-        if (p[1].equalsIgnoreCase("animal")){
+        if (p[1].equalsIgnoreCase("animal")) {
             service.deleteAnimal(Long.parseLong(p[2]));
-            System.out.println("Животное" + p[2] + "Удалено");
+            System.out.println("Животное " + p[2] + " удалено");
         }
     }
 
 
-    private void handleAdopt(String[] p){
+    private void handleAdopt(String[] p) {
         if (p.length < 3) {
             System.out.println("adopt <animalId> <adopterId>");
-            return;}
+            return;
+        }
         AdoptionRequest req = service.createRequest(Long.parseLong(p[1]), Long.parseLong(p[2]));
         System.out.println("Создана заявка: " + req);
 
     }
 
-    private void handleApprove(String[] p){
-        if (p.length<2){
+    private void handleApprove(String[] p) {
+        if (p.length < 2) {
             System.out.println("approve <requestId>");
-            return;}
+            return;
+        }
         service.approveRequest(Long.parseLong(p[1]));
         System.out.println("Заявка одобрена");
     }

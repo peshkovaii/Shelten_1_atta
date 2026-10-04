@@ -12,8 +12,8 @@ public class InMemoryAdoptionRequestRepository implements AdoptionRequestReposit
 
 
     @Override
-    public AdoptionRequest save(AdoptionRequest request){
-        if (request.getId() == null){
+    public AdoptionRequest save(AdoptionRequest request) {
+        if (request.getId() == null) {
             request.setId(nextId++);
         }
         storage.put(request.getId(), request);
@@ -34,7 +34,6 @@ public class InMemoryAdoptionRequestRepository implements AdoptionRequestReposit
     public void deleteById(Long id) {
         storage.remove(id);
     }
-
 
 
 }

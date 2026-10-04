@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AdopterRepository {
-    Adopter save (Adopter adopter);
-    Optional<Adopter> findById (Long id);
+    Adopter save(Adopter adopter);
+
+    Optional<Adopter> findById(Long id);
+
     List<Adopter> findAll();
+
     void deleteById(Long id);
 }

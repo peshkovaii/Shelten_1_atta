@@ -10,8 +10,8 @@ public class InMemoryAnimalRepository implements AnimalRepository {
     private long nextId = 1;
 
     @Override
-    public Animal save(Animal animal){
-        if (animal.getId() == null){
+    public Animal save(Animal animal) {
+        if (animal.getId() == null) {
             animal.setId(nextId++);
         }
         storage.put(animal.getId(), animal);

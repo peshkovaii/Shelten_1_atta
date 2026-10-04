@@ -11,8 +11,8 @@ public class InMemoryAdopterRepository implements AdopterRepository {
 
 
     @Override
-    public Adopter save(Adopter adopter){
-        if (adopter.getId() == null){
+    public Adopter save(Adopter adopter) {
+        if (adopter.getId() == null) {
             adopter.setId(nextId++);
         }
         storage.put(adopter.getId(), adopter);
