@@ -26,7 +26,7 @@ public class ShelterService {
         return animalRepository.save(animal);
     }
 
-    public List<Animal> findAllAnimals(){
+    public List<Animal> getAllAnimals(){
         return animalRepository.findAll();
     }
 
@@ -58,7 +58,7 @@ public class ShelterService {
         return requestRepository.save(req);
     }
 
-    public List<AdoptionRequest> gatAllRequest(){
+    public List<AdoptionRequest> getAllRequests(){
         return requestRepository.findAll();
     }
 
